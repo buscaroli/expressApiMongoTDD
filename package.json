@@ -1,0 +1,21 @@
+{
+  "name": "shiftsapi",
+  "version": "1.0.0",
+  "description": "NodeJS and Express API to keep track of work shifts and to be interfaced with MongoDB using Mongoose. ",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "node",
+    "mongo",
+    "express"
+  ],
+  "author": "mabus",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.2.7",
+    "validator": "^13.7.0"
+  }
+}
