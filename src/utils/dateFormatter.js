@@ -1,6 +1,6 @@
 const today = () => {
   let now = new Date()
-  let day = now.getDate()
+  let day = addPadding(now.getDate())
   let month = addPadding((1 + now.getMonth()).toString())
   let year = now.getFullYear()
 
@@ -16,4 +16,4 @@ const addPadding = (value) => {
   }
 }
 
-module.exports = today
+module.exports = { today, addPadding }

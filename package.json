@@ -4,7 +4,9 @@
   "description": "NodeJS and Express API to keep track of work shifts and to be interfaced with MongoDB using Mongoose. ",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [
     "node",
@@ -17,5 +19,8 @@
     "express": "^4.17.3",
     "mongoose": "^6.2.7",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
   }
 }
