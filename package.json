@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "jest",
+    "test": "jest --testEnvironment node --runInBand --detectOpenHandles",
     "test:watch": "npm run test -- --watch"
   },
   "keywords": [
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.3",
+    "mongodb-memory-server": "^8.4.1",
     "mongoose": "^6.2.7",
     "validator": "^13.7.0"
   },
