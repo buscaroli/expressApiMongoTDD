@@ -18,11 +18,20 @@ const john = {
   password: 'johnpassword',
 }
 
-test('creates an user', async () => {
+test('Should create a user', async () => {
   await request(app)
     .post('/users/signup')
     .send(matt)
     .then((res) => {
       expect(res.statusCode).toBe(201)
+    })
+})
+
+test("Should verify the new User's data", async () => {
+  await request(app)
+    .post('/users/signup')
+    .send(john)
+    .then((res) => {
+      console.log(res.body)
     })
 })
