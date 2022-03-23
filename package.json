@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "env-cmd -e dev nodemon src/index.js",
-    "test": "env-cmd -e test jest --detectOpenHandles",
-    "test:watch": "npm run test --watch --forceExit"
+    "test": "env-cmd -e test jest --detectOpenHandles --forceExit",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [
     "node",
