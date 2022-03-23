@@ -1,4 +1,4 @@
-const { addPadding, today } = require('./dateFormatter')
+const { addPadding, today } = require('../src/utils/dateFormatter')
 
 test('turns the string "8" to the string "08"', () => {
   expect(addPadding('8')).toBe('08')

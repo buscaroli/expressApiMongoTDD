@@ -4,8 +4,8 @@
   "description": "NodeJS and Express API to keep track of work shifts and to be interfaced with MongoDB using Mongoose. ",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "test": "jest --testEnvironment node --runInBand --detectOpenHandles",
+    "dev": "env-cmd -e dev nodemon src/index.js",
+    "test": "env-cmd -e test jest --detectOpenHandles",
     "test:watch": "npm run test -- --watch"
   },
   "keywords": [
@@ -16,12 +16,16 @@
   "author": "mabus",
   "license": "ISC",
   "dependencies": {
+    "env-cmd": "^10.1.0",
     "express": "^4.17.3",
-    "mongodb-memory-server": "^8.4.1",
     "mongoose": "^6.2.7",
     "validator": "^13.7.0"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
   }
 }
