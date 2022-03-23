@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('../src/app')
 const mongoose = require('mongoose')
 const User = require('../src/models/user')
+const bcrypt = require('bcrypt')
 
 beforeEach(async () => await User.deleteMany())
 afterAll(async () => await mongoose.connection.close())
@@ -38,7 +39,7 @@ test("Should verify the new User's data", async () => {
 
   expect(newUser.body.name).toBe('John')
   expect(newUser.body.email).toBe('john@email.com')
-  expect(newUser.body.password).toBe('johnpassword')
+  expect(newUser.body.password).not.toBe('johnpassword') // pw hashed by middleware
   expect(newUser.body._id).toBeDefined()
   expect(newUser.body.joined).toBeDefined()
 })
@@ -70,7 +71,11 @@ test('Should update a user name', async () => {
   // update the user's name using the PATCH method
   await request(app)
     .patch(`/users/${mattID}`) // <- do not use '/users/:id' here!! :O
-    .send({ name: 'Matteo', email: 'matteo@email.com' })
+    .send({
+      name: 'Matteo',
+      email: 'matteo@email.com',
+      password: 'matteoPassword',
+    })
     .expect(200)
 
   // find a user with matt's previously saved id

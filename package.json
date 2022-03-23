@@ -16,6 +16,7 @@
   "author": "mabus",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "env-cmd": "^10.1.0",
     "express": "^4.17.3",
     "mongoose": "^6.2.7",

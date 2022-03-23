@@ -38,9 +38,15 @@ router.patch('/users/:id', async (req, res) => {
 
   try {
     // find the user by ID and update its details
-    let newUser = await User.findByIdAndUpdate(id, req.body)
+    // let newUser = await User.findByIdAndUpdate(id, req.body)
 
-    // console.log(newUser)
+    const newUser = await User.findById(id)
+    updates.forEach((prop) => {
+      newUser[prop] = req.body[prop]
+    })
+    await newUser.save()
+
+    console.log(newUser)
     res.status(200).send(newUser)
   } catch (err) {
     throw new Error(err)
