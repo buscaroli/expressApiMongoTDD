@@ -13,4 +13,15 @@ router.post('/users/signup', async (req, res) => {
   }
 })
 
+router.delete('/users/:id', async (req, res) => {
+  try {
+    let id = await req.params.id
+    // console.log(`the id is ${id}`)
+    await User.findByIdAndDelete(id)
+    res.status(200).send()
+  } catch (err) {
+    throw new Error(err)
+  }
+})
+
 module.exports = router
