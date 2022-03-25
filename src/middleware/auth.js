@@ -22,11 +22,13 @@ const auth = async (req, res, next) => {
     // by adding it to the req property (so it is accessible via req.user)
     req.user = user
 
+    // adding token so we can easily logout user at endpoint '/users/logout'
+    req.token = token
+
     next()
   } catch (err) {
     res.status(401).send({ error: err })
   }
-  next()
 }
 
 module.exports = auth

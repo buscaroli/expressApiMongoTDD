@@ -31,3 +31,15 @@ content-type: application/json
   "email": "carl@email.com",
   "password": "carlpassword"
 }
+
+###
+
+POST http://127.0.0.1:3000/users/logout
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhNDY2ZDYwOGFkOTUwNGZiZTIiLCJpYXQiOjE2NDgyMzIwNDJ9.m0aB4Q1erg5BjtpqmiRJnXHuIe6B573hP9C4xKlPVfM
+
+{
+  "name": "George",
+  "email": "george@email.com",
+  "password": "georgepassword"
+}

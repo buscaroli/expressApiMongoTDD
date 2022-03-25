@@ -7,7 +7,7 @@ const auth = require('../middleware/auth')
 // and '/users/login' will require authentication by providing an
 // authentication token that will be validated by the server
 
-// SIGNUP
+// Signup new user
 router.post('/users/signup', async (req, res) => {
   try {
     const user = await new User(req.body)
@@ -20,6 +20,7 @@ router.post('/users/signup', async (req, res) => {
   }
 })
 
+// Login existing user
 router.post('/users/login', async (req, res) => {
   try {
     const email = req.body.email
@@ -34,10 +35,26 @@ router.post('/users/login', async (req, res) => {
   }
 })
 
+// Logout user from current device
+router.post('/users/logout', auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((item) => {
+      return item.token !== req.token
+    })
+    await req.user.save()
+
+    res.send(req.user)
+  } catch (err) {
+    res.status(500).send({ error: err })
+  }
+})
+
+// Get info about current authenticated user
 router.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
 
+// Delete current authenticated user
 router.delete('/users/:id', async (req, res) => {
   try {
     let id = await req.params.id
@@ -49,6 +66,7 @@ router.delete('/users/:id', async (req, res) => {
   }
 })
 
+// Update details of currently authenticated user
 router.patch('/users/:id', async (req, res) => {
   const id = await req.params.id
 

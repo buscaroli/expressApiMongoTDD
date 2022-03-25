@@ -136,7 +136,7 @@ test('Should allow an authenticated user to access their data', async () => {
     .set('Authorization', 'Bearer ' + token)
     .send(userAuth)
 
-  console.log('firstRes status: ', firstRes.status)
+  // console.log('firstRes status: ', firstRes.status)
   expect(firstRes.status).toBe(200)
 
   const secondRes = await request(app)
@@ -144,17 +144,62 @@ test('Should allow an authenticated user to access their data', async () => {
     .set('Authorization', 'Bearer ' + token)
     .send(userAuth)
 
-  console.log('secondRes status: ', secondRes.status)
+  // console.log('secondRes status: ', secondRes.status)
   expect(secondRes.status).toBe(200)
 })
 
-// test('Should not allow a user to access data if not authenticated', async () => {
-//   let george = await new User(userAuth)
-//   await george.save()
+test('Should not allow a user to access data if not authenticated', async () => {
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
 
-//   await request(app)
-//     .post('/users/login')
-//     .set('Authorization', 'bearer ' + 'asdasdasdasd')
-//     .send(userAuth)
-//     .expect(500)
-// })
+  const firstRes = await request(app)
+    .post('/users/login')
+    .set('Authorization', 'Bearer ' + token)
+    .send(userAuth)
+
+  // console.log('firstRes status: ', firstRes.status)
+  expect(firstRes.status).toBe(200)
+
+  const secondRes = await request(app)
+    .get('/users/me')
+    .set('Authorization', 'Bearer ' + 'madeUpToken.lsakdladklasdk')
+    .send(userAuth)
+
+  // console.log('secondRes status: ', secondRes.status)
+  expect(secondRes.status).not.toBe(200)
+})
+
+test('Should logout authenticated user', async () => {
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
+
+  const firstRes = await request(app)
+    .post('/users/login')
+    .set('Authorization', 'Bearer ' + token)
+    .send(userAuth)
+
+  // console.log('firstRes status: ', firstRes.status)
+  expect(firstRes.status).toBe(200)
+
+  const secondRes = await request(app)
+    .get('/users/me')
+    .set('Authorization', 'Bearer ' + token)
+    .send(userAuth)
+
+  // console.log('secondRes status: ', secondRes.status)
+  expect(secondRes.status).toBe(200)
+
+  let tokensNumber = george.tokens.length
+  // console.log(`Tokens number: ${tokensNumber}`)
+  // console.log('***', george.tokens)
+
+  const thirdRes = await request(app)
+    .post('/users/logout')
+    .set('Authorization', 'Bearer ' + 'dfdfddfdfd')
+    .send(userAuth)
+
+  // console.log('*****', george.tokens)
+  expect(thirdRes.status).toBe(401)
+})
