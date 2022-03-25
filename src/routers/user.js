@@ -1,6 +1,11 @@
 const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
+const auth = require('../middleware/auth')
+
+// Every request to the API apart to the endpoints '/users/signup'
+// and '/users/login' will require authentication by providing an
+// authentication token that will be validated by the server
 
 // SIGNUP
 router.post('/users/signup', async (req, res) => {
@@ -22,10 +27,15 @@ router.post('/users/login', async (req, res) => {
     const user = await User.findByEmailAndPassword({ email, password })
     const token = await user.generateAuthToken()
 
+    // console.log(`route /users/login\n${user}\n${token}`)
     res.send({ user, token })
   } catch (err) {
     res.status(500).send({ error: err })
   }
+})
+
+router.get('/users/me', auth, async (req, res) => {
+  res.send(req.user)
 })
 
 router.delete('/users/:id', async (req, res) => {

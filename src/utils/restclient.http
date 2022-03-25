@@ -1,8 +1,33 @@
 POST http://127.0.0.1:3000/users/login
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhNDY2ZDYwOGFkOTUwNGZiZTIiLCJpYXQiOjE2NDgyMTc3NjR9.u8klqE-9ARxwmgolXl6ePLBwm50_SPdd2aby-nTAYQM
 
 {
-  "name": "Susan",
-  "email": "susan@email.com",
-  "password": "susanpassword"
+  "name": "George",
+  "email": "george@email.com",
+  "password": "georgepassword"
+}
+
+###
+
+GET http://127.0.0.1:3000/users/me
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhNDY2ZDYwOGFkOTUwNGZiZTIiLCJpYXQiOjE2NDgyMjAzNjR9.AEsIZgD6Es-ew-bfNHI77heD5d1b6bApWE_Q46YHXt4
+
+{
+  "name": "George",
+  "email": "george@email.com",
+  "password": "georgepassword"
+}
+
+###
+
+POST http://127.0.0.1:3000/users/signup
+content-type: application/json
+
+
+{
+  "name": "Carl",
+  "email": "carl@email.com",
+  "password": "carlpassword"
 }

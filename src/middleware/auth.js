@@ -1,9 +1,32 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+// authentication
+// check if client has a valid token (is authenticated)
 const auth = async (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '')
-  console.log(token)
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '')
+    const decodedToken = jwt.verify(token, process.env.JWT_PW)
 
+    // find user with correct id that has the authentication token still stored
+    const user = await User.findOne({
+      _id: decodedToken._id,
+      'tokens.token': token,
+    })
+
+    if (!user) {
+      throw new Error() // will trigger the catch code below
+    }
+
+    // if the client was successfully authenticated we can send the user back
+    // by adding it to the req property (so it is accessible via req.user)
+    req.user = user
+
+    next()
+  } catch (err) {
+    res.status(401).send({ error: err })
+  }
   next()
 }
+
+module.exports = auth

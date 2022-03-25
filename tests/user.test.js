@@ -25,6 +25,12 @@ const userThree = {
   password: 'susanpassword',
 }
 
+const userAuth = {
+  name: 'George',
+  email: 'george@email.com',
+  password: 'georgepassword',
+}
+
 test('Should create a user', async () => {
   let res = await request(app).post('/users/signup').send(userOne)
   expect(res.statusCode).toBe(201)
@@ -119,3 +125,36 @@ test('Should Not login a user with wrong credentials', async () => {
   })
   expect(res.statusCode).not.toBe(200)
 })
+
+test('Should allow an authenticated user to access their data', async () => {
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
+
+  const firstRes = await request(app)
+    .post('/users/login')
+    .set('Authorization', 'Bearer ' + token)
+    .send(userAuth)
+
+  console.log('firstRes status: ', firstRes.status)
+  expect(firstRes.status).toBe(200)
+
+  const secondRes = await request(app)
+    .get('/users/me')
+    .set('Authorization', 'Bearer ' + token)
+    .send(userAuth)
+
+  console.log('secondRes status: ', secondRes.status)
+  expect(secondRes.status).toBe(200)
+})
+
+// test('Should not allow a user to access data if not authenticated', async () => {
+//   let george = await new User(userAuth)
+//   await george.save()
+
+//   await request(app)
+//     .post('/users/login')
+//     .set('Authorization', 'bearer ' + 'asdasdasdasd')
+//     .send(userAuth)
+//     .expect(500)
+// })
