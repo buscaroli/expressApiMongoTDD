@@ -3,6 +3,7 @@ const app = require('../src/app')
 const mongoose = require('mongoose')
 const User = require('../src/models/user')
 const bcrypt = require('bcrypt')
+const { send } = require('express/lib/response')
 
 beforeEach(async () => await User.deleteMany())
 afterAll(async () => await mongoose.connection.close())
@@ -202,4 +203,31 @@ test('Should logout authenticated user', async () => {
 
   // console.log('*****', george.tokens)
   expect(thirdRes.status).toBe(401)
+})
+
+test('Should logout from all devices', async () => {
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
+
+  console.log('1. tokens', george.tokens.length)
+
+  const token2 = await george.generateAuthToken()
+  await request(app)
+    .post('/users/login')
+    .set('Authorization', 'Bearer ' + token2)
+    .send(userAuth)
+
+  console.log('2. tokens', george.tokens.length)
+
+  await request(app)
+    .post('/users/logoutAll')
+    .set('Authorization', 'Bearer ' + token2)
+    .send(userAuth)
+
+  console.log('3. tokens', george.tokens.length)
+
+  const response = await User.findById(george._id)
+
+  expect(response.tokens.length).toBe(0)
 })

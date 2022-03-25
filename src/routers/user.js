@@ -49,6 +49,18 @@ router.post('/users/logout', auth, async (req, res) => {
   }
 })
 
+// Logout from every device
+router.post('/users/logoutAll', auth, async (req, res) => {
+  try {
+    req.user.tokens = []
+    await req.user.save()
+
+    res.send(req.user)
+  } catch (err) {
+    res.status(500).send({ error: err })
+  }
+})
+
 // Get info about current authenticated user
 router.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
