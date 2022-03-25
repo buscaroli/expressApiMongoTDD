@@ -6,8 +6,10 @@ const router = new express.Router()
 router.post('/users/signup', async (req, res) => {
   try {
     const user = await new User(req.body)
+    const token = await user.generateAuthToken()
     await user.save()
-    res.status(201).send(user)
+
+    res.status(201).send({ user, token })
   } catch (err) {
     res.status(500).send(err)
   }
@@ -18,7 +20,9 @@ router.post('/users/login', async (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const user = await User.findByEmailAndPassword({ email, password })
-    res.send()
+    const token = await user.generateAuthToken()
+
+    res.send({ user, token })
   } catch (err) {
     res.status(500).send({ error: err })
   }

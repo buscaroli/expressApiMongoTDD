@@ -41,11 +41,11 @@ test('Should NOT create a user if already present in the database', async () => 
 test("Should verify the new User's data", async () => {
   const newUser = await request(app).post('/users/signup').send(userTwo)
 
-  expect(newUser.body.name).toBe('John')
-  expect(newUser.body.email).toBe('john@email.com')
-  expect(newUser.body.password).not.toBe('johnpassword') // pw hashed by middleware
-  expect(newUser.body._id).toBeDefined()
-  expect(newUser.body.joined).toBeDefined()
+  expect(newUser.body.user.name).toBe('John')
+  expect(newUser.body.user.email).toBe('john@email.com')
+  expect(newUser.body.user.password).not.toBe('johnpassword') // pw hashed by middleware
+  expect(newUser.body.user._id).toBeDefined()
+  expect(newUser.body.user.joined).toBeDefined()
 })
 
 test('Should delete a user', async () => {

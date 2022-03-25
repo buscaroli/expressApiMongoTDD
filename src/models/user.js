@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const res = require('express/lib/response')
 
 const userSchema = new Schema({
@@ -31,6 +32,14 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 })
 
 // Static Methods - callable on the Class/Model
@@ -54,6 +63,16 @@ userSchema.statics.findByEmailAndPassword = async ({ email, password }) => {
 // return a shorter version of the user that doesn't contain private data (eg password)
 userSchema.methods.getMinimalProfile = async function () {
   return { name: this.name, email: this.email, joined: this.joined }
+}
+
+// generate a json-webtoken for auth purposes
+userSchema.methods.generateAuthToken = async function () {
+  const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_PW)
+
+  this.tokens = this.tokens.concat({ token })
+  await this.save()
+
+  return token
 }
 
 // Middleware to hash password using default salts = 10
