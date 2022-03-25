@@ -67,15 +67,21 @@ router.get('/users/me', auth, async (req, res) => {
 })
 
 // Delete current authenticated user
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
   try {
-    let id = await req.params.id
-    // console.log(`the id is ${id}`)
-    await User.findByIdAndDelete(id)
-    res.status(200).send()
+    await User.findByIdAndDelete({ _id: req.user._id })
+    res.send()
   } catch (err) {
     res.status(500).send({ error: err })
   }
+  // try {
+  //   let id = await req.params.id
+  //   // console.log(`the id is ${id}`)
+  //   await User.findByIdAndDelete(id)
+  //   res.status(200).send()
+  // } catch (err) {
+  //   res.status(500).send({ error: err })
+  // }
 })
 
 // Update details of currently authenticated user

@@ -25,6 +25,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhN
 POST http://127.0.0.1:3000/users/signup
 content-type: application/json
 
+{
+  "name": "George",
+  "email": "george@email.com",
+  "password": "georgepassword"
+}
+
+###
+
+POST http://127.0.0.1:3000/users/signup
+content-type: application/json
+
 
 {
   "name": "Carl",
@@ -49,6 +60,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhN
 POST http://127.0.0.1:3000/users/logoutAll
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhNDY2ZDYwOGFkOTUwNGZiZTIiLCJpYXQiOjE2NDgyMzIxOTR9.SxtdZ2P8GWI77FeS50RTpLpPqDEjjV35sIyklDkyGmA
+
+{
+  "name": "George",
+  "email": "george@email.com",
+  "password": "georgepassword"
+}
+
+###
+DELETE http://127.0.0.1:3000/users/me
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNlMWFmZjY3NTIzNDNiMTdhZTJmN2IiLCJpYXQiOjE2NDgyMzczMTF9.5TJ8j6AfQMC4ezLgIXXZgvxmqi5j1saOsLuFi49tf1U
 
 {
   "name": "George",

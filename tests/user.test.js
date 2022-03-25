@@ -56,21 +56,20 @@ test("Should verify the new User's data", async () => {
 })
 
 test('Should delete a user', async () => {
-  // create a User named susan and save it to the db
-  const susan = new User(userThree)
-  await susan.save()
-  let susanID = susan._id.toString()
+  // create a User named George and save it to the db
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
 
-  // find the user to be sure record has been created
-  const newUser = await User.findById(susanID)
-  expect(newUser._id.toString()).toBe(susanID)
+  // deleting george
+  await request(app)
+    .delete('/users/me')
+    .set('Authentication', 'Bearer ' + token)
+    .send(userAuth)
 
-  // delete the user
-  await request(app).delete(`/users/${susanID}`).send().expect(200)
+  const response = await User.findById(george._id)
 
-  // confirm record has been deleted
-  const deletedUser = await User.findById(susanID)
-  expect(deletedUser).toBe(null)
+  expect(response.status).toBe(undefined)
 })
 
 test('Should update a user name', async () => {
@@ -210,7 +209,7 @@ test('Should logout from all devices', async () => {
   const token = await george.generateAuthToken()
   await george.save()
 
-  console.log('1. tokens', george.tokens.length)
+  // console.log('1. tokens', george.tokens.length)
 
   const token2 = await george.generateAuthToken()
   await request(app)
@@ -218,14 +217,14 @@ test('Should logout from all devices', async () => {
     .set('Authorization', 'Bearer ' + token2)
     .send(userAuth)
 
-  console.log('2. tokens', george.tokens.length)
+  // console.log('2. tokens', george.tokens.length)
 
   await request(app)
     .post('/users/logoutAll')
     .set('Authorization', 'Bearer ' + token2)
     .send(userAuth)
 
-  console.log('3. tokens', george.tokens.length)
+  // console.log('3. tokens', george.tokens.length)
 
   const response = await User.findById(george._id)
 
