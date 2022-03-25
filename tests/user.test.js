@@ -26,12 +26,16 @@ const userThree = {
 }
 
 test('Should create a user', async () => {
-  await request(app)
-    .post('/users/signup')
-    .send(userOne)
-    .then((res) => {
-      expect(res.statusCode).toBe(201)
-    })
+  let res = await request(app).post('/users/signup').send(userOne)
+  expect(res.statusCode).toBe(201)
+})
+
+test('Should NOT create a user if already present in the database', async () => {
+  await request(app).post('/users/signup').send(userOne)
+
+  const res = await request(app).post('/users/signup').send(userOne)
+
+  expect(res.statusCode).not.toBe(201)
 })
 
 test("Should verify the new User's data", async () => {
@@ -82,4 +86,36 @@ test('Should update a user name', async () => {
   const updatedUser = await User.findById(mattID)
 
   expect(updatedUser.name).toBe('Matteo')
+})
+
+test('Should find a user by email and password', async () => {
+  let john = new User(userTwo)
+  await john.save()
+
+  let user = await User.findByEmailAndPassword({
+    email: 'john@email.com',
+    password: 'johnpassword',
+  })
+  expect(john.name).toBe(user.name)
+})
+
+test('Should login a user with correct credentials', async () => {
+  let susan = new User(userThree)
+  await susan.save()
+
+  let res = await request(app).post('/users/login').send(userThree)
+
+  expect(res.statusCode).toBe(200)
+})
+
+test('Should Not login a user with wrong credentials', async () => {
+  let susan = new User(userThree)
+  await susan.save()
+
+  let res = await request(app).post('/users/login').send({
+    name: 'Susan',
+    email: 'susan@email.com',
+    password: 'WRONGpassword',
+  })
+  expect(res.statusCode).not.toBe(200)
 })

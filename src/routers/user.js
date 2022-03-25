@@ -13,6 +13,17 @@ router.post('/users/signup', async (req, res) => {
   }
 })
 
+router.post('/users/login', async (req, res) => {
+  try {
+    const email = req.body.email
+    const password = req.body.password
+    const user = await User.findByEmailAndPassword({ email, password })
+    res.send()
+  } catch (err) {
+    res.status(500).send({ error: err })
+  }
+})
+
 router.delete('/users/:id', async (req, res) => {
   try {
     let id = await req.params.id
@@ -20,7 +31,7 @@ router.delete('/users/:id', async (req, res) => {
     await User.findByIdAndDelete(id)
     res.status(200).send()
   } catch (err) {
-    throw new Error(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -37,19 +48,15 @@ router.patch('/users/:id', async (req, res) => {
   }
 
   try {
-    // find the user by ID and update its details
-    // let newUser = await User.findByIdAndUpdate(id, req.body)
-
     const newUser = await User.findById(id)
     updates.forEach((prop) => {
       newUser[prop] = req.body[prop]
     })
     await newUser.save()
 
-    console.log(newUser)
     res.status(200).send(newUser)
   } catch (err) {
-    throw new Error(err)
+    res.status(500).send({ error: err })
   }
 })
 

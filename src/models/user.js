@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const res = require('express/lib/response')
 
 const userSchema = new Schema({
   name: {
@@ -32,8 +33,23 @@ const userSchema = new Schema({
   },
 })
 
+// Static Methods - callable on the Class/Model
+userSchema.statics.findByEmailAndPassword = async ({ email, password }) => {
+  try {
+    let user = await User.findOne({ email })
+    if (!user) throw new Error({ error: 'Unable to Login.' })
+
+    let matchingPW = await bcrypt.compare(password, user.password)
+    if (!matchingPW) throw new Error({ error: 'Wrong credentials.' })
+
+    return user
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 // Virtual Methods (callable on the instance (eg user.method()))
-// Do nor use () => {} Fat Arrow functions!!
+// Do not use () => {} Fat Arrow functions!!
 
 // return a shorter version of the user that doesn't contain private data (eg password)
 userSchema.methods.getMinimalProfile = async function () {
