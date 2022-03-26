@@ -5,9 +5,14 @@ const User = require('../src/models/user')
 const bcrypt = require('bcrypt')
 const { send } = require('express/lib/response')
 
+// deleting all users from database before running test suite
 beforeEach(async () => await User.deleteMany())
+
+// closing database connection after running testing suite
 afterAll(async () => await mongoose.connection.close())
 
+///////////////////////////////////
+// user objects used during testing
 const userOne = {
   name: 'Matt',
   email: 'matt@email.com',
@@ -32,22 +37,28 @@ const userAuth = {
   password: 'georgepassword',
 }
 
+///////////////////////////////////
+
 test('Should create a user', async () => {
+  // adding a user to the database and testing server response
   let res = await request(app).post('/users/signup').send(userOne)
   expect(res.statusCode).toBe(201)
 })
 
 test('Should NOT create a user if already present in the database', async () => {
+  // adding a user to the database using the /users/signup endpoint
   await request(app).post('/users/signup').send(userOne)
 
+  // trying to add a user with same email to the database and testing for failure
   const res = await request(app).post('/users/signup').send(userOne)
-
   expect(res.statusCode).not.toBe(201)
 })
 
 test("Should verify the new User's data", async () => {
+  // adding a user to the database using the /users/signup endpoint
   const newUser = await request(app).post('/users/signup').send(userTwo)
 
+  // testing the user s properties are as expected
   expect(newUser.body.user.name).toBe('John')
   expect(newUser.body.user.email).toBe('john@email.com')
   expect(newUser.body.user.password).not.toBe('johnpassword') // pw hashed by middleware
@@ -67,37 +78,18 @@ test('Should delete a user', async () => {
     .set('Authentication', 'Bearer ' + token)
     .send(userAuth)
 
+  // testing the user cannot be found
   const response = await User.findById(george._id)
-
   expect(response.status).toBe(undefined)
 })
 
-test('Should update a user name', async () => {
-  // create and save a user named matt
-  const matt = new User(userOne)
-  await matt.save()
-  let mattID = matt._id.toString()
-
-  // update the user's name using the PATCH method
-  await request(app)
-    .patch(`/users/${mattID}`) // <- do not use '/users/:id' here!! :O
-    .send({
-      name: 'Matteo',
-      email: 'matteo@email.com',
-      password: 'matteoPassword',
-    })
-    .expect(200)
-
-  // find a user with matt's previously saved id
-  const updatedUser = await User.findById(mattID)
-
-  expect(updatedUser.name).toBe('Matteo')
-})
-
-test('Should find a user by email and password', async () => {
+test('Should find a user using a custom Mongoose statics)', async () => {
+  // adding a user to the database using the userTwo object
   let john = new User(userTwo)
   await john.save()
 
+  // testing it is possible to find a user with the custom statics
+  // findByEmailAndPassword() that can be founs in src/models/user.js
   let user = await User.findByEmailAndPassword({
     email: 'john@email.com',
     password: 'johnpassword',
@@ -106,18 +98,21 @@ test('Should find a user by email and password', async () => {
 })
 
 test('Should login a user with correct credentials', async () => {
+  // adding a user to the database using the userThree object
   let susan = new User(userThree)
   await susan.save()
 
+  // testing it will log the user in with correct credentials
   let res = await request(app).post('/users/login').send(userThree)
-
   expect(res.statusCode).toBe(200)
 })
 
 test('Should Not login a user with wrong credentials', async () => {
+  // adding a user to the database using the userThree object
   let susan = new User(userThree)
   await susan.save()
 
+  // testing it will not log the user in with wrong credentials
   let res = await request(app).post('/users/login').send({
     name: 'Susan',
     email: 'susan@email.com',
@@ -127,106 +122,99 @@ test('Should Not login a user with wrong credentials', async () => {
 })
 
 test('Should allow an authenticated user to access their data', async () => {
+  // creating a user and adding auth token
   const george = await new User(userAuth)
   const token = await george.generateAuthToken()
   await george.save()
 
+  // testing it is possible to get user data if authenticated
   const firstRes = await request(app)
-    .post('/users/login')
-    .set('Authorization', 'Bearer ' + token)
-    .send(userAuth)
-
-  // console.log('firstRes status: ', firstRes.status)
-  expect(firstRes.status).toBe(200)
-
-  const secondRes = await request(app)
     .get('/users/me')
     .set('Authorization', 'Bearer ' + token)
     .send(userAuth)
 
-  // console.log('secondRes status: ', secondRes.status)
-  expect(secondRes.status).toBe(200)
+  expect(firstRes.status).toBe(200)
 })
 
 test('Should not allow a user to access data if not authenticated', async () => {
+  // creating a user and adding an auth token
   const george = await new User(userAuth)
   const token = await george.generateAuthToken()
   await george.save()
 
-  const firstRes = await request(app)
-    .post('/users/login')
-    .set('Authorization', 'Bearer ' + token)
-    .send(userAuth)
-
-  // console.log('firstRes status: ', firstRes.status)
-  expect(firstRes.status).toBe(200)
-
+  // testing it is not possible to login without a valid token
   const secondRes = await request(app)
     .get('/users/me')
     .set('Authorization', 'Bearer ' + 'madeUpToken.lsakdladklasdk')
     .send(userAuth)
 
-  // console.log('secondRes status: ', secondRes.status)
   expect(secondRes.status).not.toBe(200)
 })
 
 test('Should logout authenticated user', async () => {
+  // creating a user and adding an authentication token
   const george = await new User(userAuth)
   const token = await george.generateAuthToken()
   await george.save()
 
-  const firstRes = await request(app)
-    .post('/users/login')
-    .set('Authorization', 'Bearer ' + token)
-    .send(userAuth)
-
-  // console.log('firstRes status: ', firstRes.status)
-  expect(firstRes.status).toBe(200)
-
+  // testing it is possible to log in to get auth user details
   const secondRes = await request(app)
     .get('/users/me')
     .set('Authorization', 'Bearer ' + token)
     .send(userAuth)
 
-  // console.log('secondRes status: ', secondRes.status)
   expect(secondRes.status).toBe(200)
 
-  let tokensNumber = george.tokens.length
-  // console.log(`Tokens number: ${tokensNumber}`)
-  // console.log('***', george.tokens)
-
+  // logging out and testing it is not possible to get user details
   const thirdRes = await request(app)
     .post('/users/logout')
     .set('Authorization', 'Bearer ' + 'dfdfddfdfd')
     .send(userAuth)
 
-  // console.log('*****', george.tokens)
   expect(thirdRes.status).toBe(401)
 })
 
 test('Should logout from all devices', async () => {
+  // creating a user and adding an authentication token
   const george = await new User(userAuth)
   const token = await george.generateAuthToken()
   await george.save()
 
-  // console.log('1. tokens', george.tokens.length)
+  // // generating an extra token, not necessary, just trying it works
+  // const token2 = await george.generateAuthToken()
 
-  const token2 = await george.generateAuthToken()
-  await request(app)
-    .post('/users/login')
-    .set('Authorization', 'Bearer ' + token2)
-    .send(userAuth)
-
-  // console.log('2. tokens', george.tokens.length)
-
+  // logging out from all devices by deleting all tokens
   await request(app)
     .post('/users/logoutAll')
-    .set('Authorization', 'Bearer ' + token2)
+    .set('Authorization', 'Bearer ' + token) // can use token2
     .send(userAuth)
 
-  // console.log('3. tokens', george.tokens.length)
-
+  // finding the user through georges id
   const response = await User.findById(george._id)
 
+  // testing that the tokens array is empty
   expect(response.tokens.length).toBe(0)
+})
+
+test('Should modify the user properties', async () => {
+  // creating a user and adding an authentication token
+  const george = await new User(userAuth)
+  const token = await george.generateAuthToken()
+  await george.save()
+
+  // saving old password before the update
+  const georgeOldEmail = george.email
+
+  // updating allowed properties through the /users/me endpoint
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', 'Bearer ' + token)
+    .send({ name: 'CantStandYa', email: 'masterof@yourdomain.org' })
+
+  // finding the updated user
+  const response = await User.findById(george._id)
+
+  // testing properties have changed
+  expect(response.email).not.toBe(georgeOldEmail)
+  expect(response.email).toBe('masterof@yourdomain.org')
 })

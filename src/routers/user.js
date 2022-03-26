@@ -85,7 +85,7 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 // Update details of currently authenticated user
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/me', auth, async (req, res) => {
   const id = await req.params.id
 
   // Check all updates are allowed (eg updating id or timestamp disallowed)
@@ -96,18 +96,28 @@ router.patch('/users/:id', async (req, res) => {
   if (!isValid) {
     return res.status(400).send({ error: 'Opration not allowed.' })
   }
-
+  console.log(`\nBefore try: ${req.user}\n`)
   try {
-    const newUser = await User.findById(id)
     updates.forEach((prop) => {
-      newUser[prop] = req.body[prop]
+      req.user[prop] = req.body[prop]
     })
-    await newUser.save()
-
-    res.status(200).send(newUser)
+    await req.user.save()
+    console.log(`\nInside try before send(): ${req.user}\n`)
+    res.send(req.user)
   } catch (err) {
     res.status(500).send({ error: err })
   }
+  // try {
+  //   const newUser = await User.findById(id)
+  //   updates.forEach((prop) => {
+  //     newUser[prop] = req.body[prop]
+  //   })
+  //   await newUser.save()
+
+  //   res.status(200).send(newUser)
+  // } catch (err) {
+  //   res.status(500).send({ error: err })
+  // }
 })
 
 module.exports = router
