@@ -2,11 +2,16 @@ const request = require('supertest')
 const app = require('../src/app')
 const mongoose = require('mongoose')
 const User = require('../src/models/user')
+const Shift = require('../src/models/shift')
 const bcrypt = require('bcrypt')
 const { send } = require('express/lib/response')
 
-// deleting all users from database before running test suite
-beforeEach(async () => await User.deleteMany())
+// deleting all users and shifts from database before running test suite
+beforeEach(async () => {
+  await User.deleteMany()
+  await Shift.deleteMany()
+  return
+})
 
 // closing database connection after running testing suite
 afterAll(async () => await mongoose.connection.close())

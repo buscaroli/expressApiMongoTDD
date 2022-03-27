@@ -16,7 +16,7 @@ router.post('/users/signup', async (req, res) => {
 
     res.status(201).send({ user, token })
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -96,28 +96,17 @@ router.patch('/users/me', auth, async (req, res) => {
   if (!isValid) {
     return res.status(400).send({ error: 'Opration not allowed.' })
   }
-  console.log(`\nBefore try: ${req.user}\n`)
+
   try {
     updates.forEach((prop) => {
       req.user[prop] = req.body[prop]
     })
     await req.user.save()
-    console.log(`\nInside try before send(): ${req.user}\n`)
+
     res.send(req.user)
   } catch (err) {
     res.status(500).send({ error: err })
   }
-  // try {
-  //   const newUser = await User.findById(id)
-  //   updates.forEach((prop) => {
-  //     newUser[prop] = req.body[prop]
-  //   })
-  //   await newUser.save()
-
-  //   res.status(200).send(newUser)
-  // } catch (err) {
-  //   res.status(500).send({ error: err })
-  // }
 })
 
 module.exports = router

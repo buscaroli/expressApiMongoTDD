@@ -19,7 +19,7 @@ const userSchema = new Schema({
     trim: true,
     validate(address) {
       if (!validator.isEmail(address)) {
-        throw new Error('Invalid email provided.')
+        throw new Error({ error: 'Invalid email provided.' })
       }
     },
   },

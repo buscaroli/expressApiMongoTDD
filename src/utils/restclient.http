@@ -26,6 +26,17 @@ POST http://127.0.0.1:3000/users/signup
 content-type: application/json
 
 {
+  "name": "Matt",
+  "email": "matt@email.com",
+  "password": "mattpassword"
+}
+
+###
+
+POST http://127.0.0.1:3000/users/signup
+content-type: application/json
+
+{
   "name": "George",
   "email": "george@email.com",
   "password": "georgepassword"
@@ -76,4 +87,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNlMWFmZ
   "name": "George",
   "email": "george@email.com",
   "password": "georgepassword"
+}
+
+###
+POST http://127.0.0.1:3000/shifts/add
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQwYTc5NGJjZWYzNTcyOGYzYTYyMzMiLCJpYXQiOjE2NDg0MDQzNzJ9.xD-uH0OUmagNJv_vmyhxJXSXB4LQZrw-qiQkJFtl9A8
+
+{
+  "where": "Poole",
+  "billed": 185.50,
+  "description": "Poole HighStreet",
+  "owner": "6240a501221d86a8a9418708"
 }
