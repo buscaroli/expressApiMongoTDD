@@ -246,3 +246,50 @@ test('Should delete users shifts when deleting user', async () => {
   const deletedShift = await Shift.findById(shiftID)
   expect(deletedShift).toBe(null)
 })
+
+test('Should return all the shifts of the authenticated user', async () => {
+  // create a user, authorize it and save to the db
+  const matt = await new User(userOne)
+  const token = await matt.generateAuthToken()
+  await matt.save()
+
+  // create a shift
+  const mattShift = new Shift({
+    where: 'Wimborne',
+    billed: 190,
+    description: 'Worked 8 hours, paid lunch cover',
+    owner: matt._id,
+  })
+  await mattShift.save()
+
+  // create a second shift
+  const mattShift2 = new Shift({
+    where: 'Poole',
+    billed: 200,
+    description: 'Worked 9 hours, paid lunch cover',
+    owner: matt._id,
+    paid: true,
+  })
+  await mattShift2.save()
+
+  // create a third shift
+  const mattShift3 = new Shift({
+    where: 'Southbourne',
+    billed: 230,
+    description: 'Worked 9 hours',
+    owner: matt._id,
+  })
+  await mattShift3.save()
+
+  // request all the shifts through the endpoint and expect a
+  // respomnse status of 200 OK
+  await request(app)
+    .get('/shifts')
+    .set('Authorization', 'Bearer ' + token)
+    .send()
+    .expect(200)
+
+  // test that all three shifts can be found
+  const mattShifts = await Shift.find({ owner: matt._id })
+  expect(mattShifts.length).toBe(3)
+})
