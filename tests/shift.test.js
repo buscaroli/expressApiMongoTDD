@@ -8,7 +8,6 @@ const User = require('../src/models/user')
 beforeEach(async () => {
   await User.deleteMany()
   await Shift.deleteMany()
-  return
 })
 
 // closing database connection after running testing suite
@@ -216,4 +215,34 @@ test('Should not return a nonexistent shift', async () => {
     .set('Authorization', 'Bearer ' + token)
     .send()
     .expect(404)
+})
+
+test('Should delete users shifts when deleting user', async () => {
+  // create a user, authorize it and save to the db
+  const matt = await new User(userOne)
+  const token = await matt.generateAuthToken()
+  await matt.save()
+
+  // create a shift
+  const mattShift = new Shift({
+    where: 'Wimborne',
+    billed: 190,
+    description: 'Worked 8 hours, paid lunch cover',
+    owner: matt._id,
+  })
+  await mattShift.save()
+
+  const shiftID = mattShift._id
+
+  // delete the user matt and test for status code 200 OK
+  await request(app)
+    .delete(`/users/me`)
+    .set('Authorization', 'Bearer ' + token)
+    .send()
+    .expect(200)
+
+  // look for the shift of the deleted user and test that it is not stored
+  // in the db anymore
+  const deletedShift = await Shift.findById(shiftID)
+  expect(deletedShift).toBe(null)
 })

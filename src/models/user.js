@@ -83,6 +83,14 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
+// Removed as not working, middleware was ignored
+// // When deleting user, also delete all his shifts
+// userSchema.pre('findByIdAndDelete', async function (next) {
+//   await Shift.deleteMany({ owner: this._id })
+//   console.log('--------- running the delete pre middleware')
+//   next()
+// })
+
 const User = mongoose.model('user', userSchema) // this needs to be here at the end!
 
 module.exports = User

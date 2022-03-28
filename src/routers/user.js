@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
 const auth = require('../middleware/auth')
+const Shift = require('../models/shift')
 
 // Every request to the API apart to the endpoints '/users/signup'
 // and '/users/login' will require authentication by providing an
@@ -71,9 +72,14 @@ router.get('/users/me', auth, async (req, res) => {
 })
 
 // Delete current authenticated user
+// NB all of the user's shifts will also be deleted thanks to a
+// mongoose middleware located @ src/models/user.js
 router.delete('/users/me', auth, async (req, res) => {
   try {
-    await User.findByIdAndDelete({ _id: req.user._id })
+    const user = await User.findById(req.user._id)
+    await Shift.deleteMany({ owner: user._id })
+    await user.remove()
+
     res.send()
   } catch (err) {
     res.status(500).send({ error: err })

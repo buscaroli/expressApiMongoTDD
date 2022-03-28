@@ -2,7 +2,6 @@ const express = require('express')
 const Shift = require('../models/shift')
 const router = new express.Router()
 const auth = require('../middleware/auth')
-const { request } = require('../app')
 const res = require('express/lib/response')
 
 // Add a new shift

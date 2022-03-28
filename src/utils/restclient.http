@@ -81,7 +81,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhN
 ###
 DELETE http://127.0.0.1:3000/users/me
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNlMWFmZjY3NTIzNDNiMTdhZTJmN2IiLCJpYXQiOjE2NDgyMzczMTF9.5TJ8j6AfQMC4ezLgIXXZgvxmqi5j1saOsLuFi49tf1U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYjYxY2YzOWNmNmY5MWYxOWYzODIiLCJpYXQiOjE2NDg0NzM2Mjh9.9Q7XGHZVEDu6IgBe4PZWPNJ9bAzrBsmxKT6sGSyAHBc
 
 {
   "name": "George",
@@ -92,11 +92,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNlMWFmZ
 ###
 POST http://127.0.0.1:3000/shifts/add
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQwYTc5NGJjZWYzNTcyOGYzYTYyMzMiLCJpYXQiOjE2NDg0MDQzNzJ9.xD-uH0OUmagNJv_vmyhxJXSXB4LQZrw-qiQkJFtl9A8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYjYyNmYzOWNmNmY5MWYxOWYzOGEiLCJpYXQiOjE2NDg0NzM2Mzh9.CdfYyoIGEXPr43L0wO3UX700BSSsKtEoh0DCVyfjTFM
 
 {
-  "where": "Poole",
-  "billed": 185.50,
-  "description": "Poole HighStreet",
-  "owner": "6240a501221d86a8a9418708"
+  "where": "Hamworthy",
+  "billed": 220,
+  "description": "Matt ir working Somewhere in Hamworthy",
+  "owner": "6241b626f39cf6f91f19f38a"
 }
