@@ -35,4 +35,43 @@ router.delete('/shifts/:id', auth, async (req, res) => {
   }
 })
 
+router.patch('/shifts/:id', auth, async (req, res) => {
+  const _id = req.params.id
+
+  const allowedUpdates = ['where', 'when', 'billed', 'description', 'paid']
+  const updates = Object.keys(req.body)
+  const isValid = updates.every((prop) => allowedUpdates.includes(prop))
+
+  if (!isValid) {
+    return res.status(400).send({ error: 'Operation not allowed.' })
+  }
+
+  try {
+    const shift = await Shift.findById(_id)
+    updates.forEach((prop) => {
+      shift[prop] = req.body[prop]
+    })
+    await shift.save()
+
+    res.send(shift)
+  } catch (err) {
+    res.status(500).send({ error: err })
+  }
+})
+
+router.get('/shifts/:id', auth, async (req, res) => {
+  const _id = req.params.id
+
+  try {
+    const shift = await Shift.findById(_id)
+    if (!shift) {
+      res.status(404).send({ result: 'Shift not found.' })
+    } else {
+      res.send(shift)
+    }
+  } catch (err) {
+    res.status(500).send({ error: err })
+  }
+})
+
 module.exports = router
