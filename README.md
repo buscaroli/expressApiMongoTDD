@@ -1,24 +1,30 @@
 # expressApiMongoTDD
+
 Implementaion of a simple API using ExpressJS and Mongoose. Using TDD with Jest and Supertest (main learning focus of the project).
 
 ## TODO
-* Send an email to the user in case password forgotten.
-* Implement a Client API (Web and/or Mobile) to easily manage their data.
+
+- Send an email to the user in case password forgotten.
+- Implement a Client API (Web and/or Mobile) to easily manage their data.
 
 ## Description
+
 I developed and deployed a webserver that allow users to create an account and to manage their work shifts data.
 
 Each shift includes:
-* date
-* place
-* description
-* amount billed
-* if paid or not (Boolean to toggle from false to true once payment has come through)
+
+- date
+- place
+- description
+- amount billed
+- if paid or not (Boolean to toggle from false to true once payment has come through)
 
 ### Tech Stack
+
 NodeJS with Express and MongoDB.
 
 ### Deployment
+
 Server deployed on Heroku @ https://dashboard.heroku.com/apps/buscaroli-shifts-api .
 Database deployed on Mongo Atlas.
 
@@ -27,6 +33,7 @@ Database deployed on Mongo Atlas.
 Created two separate environments using env-cmd, one environment was used for development and the other for testing.
 This allowed testing on a separate database.
 A configuration file named .env-cmdrc is kept in /src and looks like this:
+
 ```
 {
   "dev": {
@@ -43,9 +50,11 @@ A configuration file named .env-cmdrc is kept in /src and looks like this:
   }
 }
 ```
+
 In order to be able to test on a separate database I also split the main application file into two separate files:
 
 /src/index.js
+
 ```
 const app = require('./app')
 
@@ -57,6 +66,7 @@ app.listen(PORT, () => {
 ```
 
 /src/app.js
+
 ```
 require('./db/mongoose')
 const express = require('express')
@@ -76,9 +86,10 @@ module.exports = app
 
 ```
 
-The database is imported from: 
+The database is imported from:
 
 /src/db/mongoose.js
+
 ```
 const mongoose = require('mongoose')
 
@@ -89,25 +100,33 @@ mongoose.connect(databaseHost + databaseName)
 
 ```
 
-#### TDD development with Jest and Supertest.
+### TDD development with Jest and Supertest.
+
 Files organised unter the /test directory.
 Tested:
-* /users
-* /shifts
-* /utils
 
-#### Node Server implemented with ExpressJS
-Routes under: 
-* /src/routers/user.js
-* /src/routers/shift.js
+- /users
+- /shifts
+- /utils
+
+### Node Server implemented with ExpressJS
+
+Routes under:
+
+- /src/routers/user.js
+- /src/routers/shift.js
 
 Utilities (formatting dates) under:
-* /src/utils
+
+- /src/utils
 
 Custom middleware (authentication) under:
-* /src/middleware
 
-#### Database implemented with mongodb and Mongoose
+- /src/middleware
+
+### Database implemented with mongodb and Mongoose
+
 Mongoose schemas under:
-* /src/models/user.js
-* /src/models/shift.js
+
+- /src/models/user.js
+- /src/models/shift.js
