@@ -293,3 +293,48 @@ test('Should return all the shifts of the authenticated user', async () => {
   const mattShifts = await Shift.find({ owner: matt._id })
   expect(mattShifts.length).toBe(3)
 })
+
+test('Should return only the unpaid shifts of the authenticated user', async () => {
+  // create a user, authorize it and save to the db
+  const matt = await new User(userOne)
+  const token = await matt.generateAuthToken()
+  await matt.save()
+
+  // create a shift
+  const mattShift = new Shift({
+    where: 'Wimborne',
+    billed: 190,
+    description: 'Worked 8 hours, paid lunch cover',
+    owner: matt._id,
+  })
+  await mattShift.save()
+
+  // create a second shift
+  const mattShift2 = new Shift({
+    where: 'Poole',
+    billed: 200,
+    description: 'Worked 9 hours, paid lunch cover',
+    owner: matt._id,
+    paid: true,
+  })
+  await mattShift2.save()
+
+  // create a third shift
+  const mattShift3 = new Shift({
+    where: 'Southbourne',
+    billed: 230,
+    description: 'Worked 9 hours',
+    owner: matt._id,
+  })
+  await mattShift3.save()
+
+  // request all unpaid shifts through the endpoint and expect a
+  // response status of 200 OK and that only 2 shifts are found
+  const response = await request(app)
+    .get('/shifts')
+    .set('Authorization', 'Bearer ' + token)
+    .send({ ...userOne, select: 'unpaid' })
+    .expect(200)
+
+  expect(response.body.length).toBe(2)
+})

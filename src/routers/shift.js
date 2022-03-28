@@ -78,9 +78,17 @@ router.get('/shifts/:id', auth, async (req, res) => {
 
 // get all of the user's shifts
 router.get('/shifts', auth, async (req, res) => {
+  // if the request body contains a property called select which equals to
+  // 'unpaid' we will only search for the shifts whose paid property is false
   try {
-    const shifts = await Shift.find({ owner: req.user._id })
-    res.send(shifts)
+    let shifts = await Shift.find({ owner: req.user._id })
+
+    if (req.body.select !== undefined && req.body.select === 'unpaid') {
+      let unpaidShifts = shifts.filter((shift) => shift.paid === false)
+      res.send(unpaidShifts)
+    } else {
+      res.send(shifts)
+    }
   } catch (err) {
     res.status(500).send({ error: err })
   }

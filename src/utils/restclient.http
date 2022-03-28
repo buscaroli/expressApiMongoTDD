@@ -81,22 +81,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNkY2VhN
 ###
 DELETE http://127.0.0.1:3000/users/me
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYjYxY2YzOWNmNmY5MWYxOWYzODIiLCJpYXQiOjE2NDg0NzM2Mjh9.9Q7XGHZVEDu6IgBe4PZWPNJ9bAzrBsmxKT6sGSyAHBc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYmMwZTE0YjYzNGUzZGIzYTllZDIiLCJpYXQiOjE2NDg0NzUxNTB9.a2bkR0we3UbngzjXvMmzoP7b632agxgQgUcn7x18Dac
 
-{
-  "name": "George",
-  "email": "george@email.com",
-  "password": "georgepassword"
-}
 
 ###
 POST http://127.0.0.1:3000/shifts/add
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYjYyNmYzOWNmNmY5MWYxOWYzOGEiLCJpYXQiOjE2NDg0NzM2Mzh9.CdfYyoIGEXPr43L0wO3UX700BSSsKtEoh0DCVyfjTFM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQxYmMwYzE0YjYzNGUzZGIzYTllY2UiLCJpYXQiOjE2NDg0NzUxNDh9.JTzVKCNxgrmcd6Qo8GYbEzd4JMjKdNV9m9RNVxIle94
 
 {
-  "where": "Hamworthy",
-  "billed": 220,
-  "description": "Matt ir working Somewhere in Hamworthy",
-  "owner": "6241b626f39cf6f91f19f38a"
+  "where": "Bransgore",
+  "billed": 230,
+  "description": "George ir working Somewhere in Bransgore"
+  
 }
