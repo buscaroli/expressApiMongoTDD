@@ -66,8 +66,8 @@ test("Should verify the new User's data", async () => {
   // testing the user s properties are as expected
   expect(newUser.body.user.name).toBe('John')
   expect(newUser.body.user.email).toBe('john@email.com')
-  expect(newUser.body.user.password).not.toBe('johnpassword') // pw hashed by middleware
-  expect(newUser.body.user._id).toBeDefined()
+  expect(newUser.body.user.password).not.toBeDefined()
+  expect(newUser.body.user._id).not.toBeDefined()
   expect(newUser.body.user.joined).toBeDefined()
 })
 

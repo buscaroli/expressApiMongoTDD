@@ -14,7 +14,8 @@ router.post('/users/signup', async (req, res) => {
     const token = await user.generateAuthToken()
     await user.save()
 
-    res.status(201).send({ user, token })
+    const minProfile = await user.getMinimalProfile()
+    res.status(201).send({ user: minProfile, token })
   } catch (err) {
     res.status(500).send({ error: err })
   }
@@ -28,8 +29,8 @@ router.post('/users/login', async (req, res) => {
     const user = await User.findByEmailAndPassword({ email, password })
     const token = await user.generateAuthToken()
 
-    // console.log(`route /users/login\n${user}\n${token}`)
-    res.send({ user, token })
+    const minProfile = await user.getMinimalProfile()
+    res.send({ user: minProfile, token })
   } catch (err) {
     res.status(500).send({ error: err })
   }
@@ -43,7 +44,8 @@ router.post('/users/logout', auth, async (req, res) => {
     })
     await req.user.save()
 
-    res.send(req.user)
+    const minProfile = await req.user.getMinimalProfile()
+    res.send(minProfile)
   } catch (err) {
     res.status(500).send({ error: err })
   }
@@ -55,7 +57,8 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     req.user.tokens = []
     await req.user.save()
 
-    res.send(req.user)
+    const minProfile = await req.user.getMinimalProfile()
+    res.send(minProfile)
   } catch (err) {
     res.status(500).send({ error: err })
   }
@@ -63,7 +66,8 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 
 // Get info about current authenticated user
 router.get('/users/me', auth, async (req, res) => {
-  res.send(req.user)
+  const minProfile = await req.user.getMinimalProfile()
+  res.send(minProfile)
 })
 
 // Delete current authenticated user
@@ -74,14 +78,6 @@ router.delete('/users/me', auth, async (req, res) => {
   } catch (err) {
     res.status(500).send({ error: err })
   }
-  // try {
-  //   let id = await req.params.id
-  //   // console.log(`the id is ${id}`)
-  //   await User.findByIdAndDelete(id)
-  //   res.status(200).send()
-  // } catch (err) {
-  //   res.status(500).send({ error: err })
-  // }
 })
 
 // Update details of currently authenticated user
@@ -103,7 +99,8 @@ router.patch('/users/me', auth, async (req, res) => {
     })
     await req.user.save()
 
-    res.send(req.user)
+    const minProfile = await req.user.getMinimalProfile()
+    res.send(minProfile)
   } catch (err) {
     res.status(500).send({ error: err })
   }
