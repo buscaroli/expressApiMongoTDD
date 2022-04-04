@@ -62,7 +62,12 @@ userSchema.statics.findByEmailAndPassword = async ({ email, password }) => {
 
 // return a shorter version of the user that doesn't contain private data (eg password)
 userSchema.methods.getMinimalProfile = async function () {
-  return { name: this.name, email: this.email, joined: this.joined }
+  return {
+    name: this.name,
+    email: this.email,
+    joined: this.joined,
+    id: this._id,
+  }
 }
 
 // generate a json-webtoken for auth purposes
