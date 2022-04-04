@@ -18,7 +18,7 @@ router.post('/users/signup', async (req, res) => {
     const minProfile = await user.getMinimalProfile()
     res.status(201).send({ user: minProfile, token })
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -33,7 +33,7 @@ router.post('/users/login', async (req, res) => {
     const minProfile = await user.getMinimalProfile()
     res.send({ user: minProfile, token })
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -48,7 +48,7 @@ router.post('/users/logout', auth, async (req, res) => {
     const minProfile = await req.user.getMinimalProfile()
     res.send(minProfile)
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -61,7 +61,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     const minProfile = await req.user.getMinimalProfile()
     res.send(minProfile)
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -82,7 +82,7 @@ router.delete('/users/me', auth, async (req, res) => {
 
     res.send()
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
@@ -96,7 +96,7 @@ router.patch('/users/me', auth, async (req, res) => {
   const isValid = updates.every((prop) => allowedUpdates.includes(prop))
 
   if (!isValid) {
-    return res.status(400).send('Opration not allowed.')
+    return res.status(400).send({ error: 'Opration not allowed.' })
   }
 
   try {
@@ -108,7 +108,7 @@ router.patch('/users/me', auth, async (req, res) => {
     const minProfile = await req.user.getMinimalProfile()
     res.send(minProfile)
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send({ error: err })
   }
 })
 
