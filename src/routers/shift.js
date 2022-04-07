@@ -37,7 +37,7 @@ router.delete('/shifts/', auth, async (req, res) => {
 
 // Update/Patch a shift
 router.patch('/shifts/', auth, async (req, res) => {
-  const _id = req.body.id
+  const _id = req.body._id
 
   const allowedUpdates = ['where', 'when', 'billed', 'description', 'paid']
   const updates = Object.keys(req.body)
