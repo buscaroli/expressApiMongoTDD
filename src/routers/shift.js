@@ -19,8 +19,8 @@ router.post('/shifts/add', auth, async (req, res) => {
 })
 
 // Delete a shift
-router.delete('/shifts/', auth, async (req, res) => {
-  let _id = req.body._id
+router.delete('/shifts/:id', auth, async (req, res) => {
+  let _id = req.params.id
 
   try {
     const shift = await Shift.findByIdAndDelete({ _id })
@@ -36,8 +36,8 @@ router.delete('/shifts/', auth, async (req, res) => {
 })
 
 // Update/Patch a shift
-router.patch('/shifts/', auth, async (req, res) => {
-  const _id = req.body._id
+router.patch('/shifts/:id', auth, async (req, res) => {
+  const _id = req.params.id
 
   const allowedUpdates = ['where', 'when', 'billed', 'description', 'paid']
   const updates = Object.keys(req.body)
